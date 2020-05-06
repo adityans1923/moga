@@ -60,5 +60,16 @@ public class MOGA {
 
     public static void main(String[] args) {
         System.out.println("hello");
+        Chromosome obj1 = new Chromosome(5);
+        Chromosome obj2 = new Chromosome(5);
+        Chromosome obj = obj1.crossover(obj2);
+        System.out.println(obj1.data);
+        System.out.println(obj2.data);
+        System.out.println(obj.data);
+        System.out.println(obj.objective_values);
+        obj.mutate();
+        obj.calculate_objective_value();
+        System.out.println(obj.objective_values);
+        System.out.println(obj.data);
     }
 }
