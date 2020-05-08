@@ -120,25 +120,22 @@ public class MOGA {
     public static void main(String[] args) {
         System.out.println("hello");
         MOGA obj = new MOGA();
-        for(int i=0;i<10;i++)
-            obj.curr_pop.get(i).display();
-        System.out.println("next gene");
-        obj.next_generation();
-        for(int i=0;i<10;i++)
-            obj.next_pop.get(i).display();
-        System.out.println("plotting");
-        ArrayList<ArrayList<Double> > plotdata = new ArrayList<ArrayList<Double> >();
+//        for(int i=0;i<10;i++)
+//            obj.curr_pop.get(i).display();
+//        System.out.println("next gene");
+        ArrayList<ArrayList<Double> > idat = new ArrayList< ArrayList<Double> >();
         for(int i=0;i<obj.population_size;i++)
-            plotdata.add(obj.curr_pop.get(i).objective_values);
-
-        Plot example = new Plot( "curr gen chart",
-                "X Axiz", "Y Axis"  ,plotdata );
-
-        System.out.println("plotting next gen");
-        ArrayList<ArrayList<Double> > plotdata2 = new ArrayList<ArrayList<Double> >();
-        for(int i=0;i<obj.population_size;i++)
-            plotdata2.add(obj.next_pop.get(i).objective_values);
-        Plot example2 = new Plot( "next gen",
-                "X Axiz", "Y Axis"  ,plotdata2 );
+            idat.add(obj.curr_pop.get(i).objective_values);
+        Plot initialChart = new Plot( "Initial Gen","obj1", "obj2"  ,idat );
+        for(int i=0;i<10;i++){
+            System.out.println("Generation : "+i);
+            obj.next_generation();
+            ArrayList<ArrayList<Double> > plotdata = new ArrayList< ArrayList<Double> >();
+            for(int j=0;j<obj.population_size;j++)
+                plotdata.add(obj.next_pop.get(j).objective_values);
+            Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
+            obj.curr_pop = obj.next_pop;
+            obj.next_pop = new ArrayList<>();
+        }
     }
 }
