@@ -1,20 +1,27 @@
-import java.net.Inet4Address;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class MOGA {
-    private Random rand = new Random();
+    private Random rand;
     public final int obj_count  = Constant.obj_count;
+    public final int population_size = Constant.population_size;
+    public final int chromosome_size = Constant.chromosome_size;
     public ArrayList<Chromosome> curr_pop;
+    public ArrayList<Chromosome> next_pop;
     MOGA(){
-        // initialize population
-        // generating solution
+        // initialize variables
+        curr_pop = new ArrayList<Chromosome>(2* this.population_size + 1);
+        rand  = new Random();
+        // initializing population
+        for(int i=0;i< this.population_size; i++) curr_pop.add(new Chromosome(chromosome_size));
     }
     ArrayList<ArrayList<Integer> > non_dominating_sort() {
         // sort according to the domination into the fronts
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
         ArrayList<ArrayList<Integer>> sol_dom_by = new ArrayList<ArrayList<Integer>>();
         ArrayList<Integer> count_of_dom_by = new ArrayList<Integer>();
+
         for (int i = 0; i < curr_pop.size(); i++) {
             sol_dom_by.add(new ArrayList<Integer>());
             count_of_dom_by.add(0);
@@ -49,16 +56,78 @@ public class MOGA {
         }
         return dominated_front;
     }
-//    ArrayList<Integer> crowding_sort(){
-//
-//    }
-//
-//
-//    ArrayList<Chromosome> next_generation(){
-//
-//    }
+    void crowding_sort(ArrayList<Integer> front){
+        for(Integer x:front)    this.curr_pop.get(x).distance = 0;
+        // for each objective
+        for(int i=0;i<this.obj_count; i++){
+            int finalI = i;
+            front.sort(new Comparator<Integer>() {
+                @Override
+                public int compare(Integer integer, Integer t1) {
+                    double dd =(curr_pop.get(integer).objective_values.get(finalI) - curr_pop.get(t1).objective_values.get(finalI));
+                    if(dd<0) return -1;
+                    else if(dd > 0) return 1;
+                    return 0;
+                }
+            });
+            this.curr_pop.get(front.get(0)).distance = Constant.inf;
+            this.curr_pop.get(front.get(front.size() - 1)).distance = Constant.inf;
+            double max = 0;
+            double min = Constant.inf;
+            for (Integer integer : front) {
+                if (max < this.curr_pop.get(integer).objective_values.get(i))
+                    max = this.curr_pop.get(integer).objective_values.get(i);
+            }
+            for(int j=1; j < front.size() - 1 ; j++){
+                this.curr_pop.get(front.get(j)).distance += (double)(this.curr_pop.get(front.get(j+1)).objective_values.get(i)
+                    - this.curr_pop.get(front.get(j-1)).objective_values.get(i) ) /(max-min);
+            }
+        }
+    }
+
+    void next_generation(){
+        // Generating child population and combining P and Q
+        for(int i=0;i<this.population_size;i++){
+            int index1 = rand.nextInt(this.population_size);
+            int index2 = rand.nextInt(this.population_size);
+            while(index2 == index1)
+                index2 = rand.nextInt(this.population_size);
+            this.curr_pop.add(this.curr_pop.get(index1).crossover(this.curr_pop.get(index2)));
+            this.curr_pop.get(this.curr_pop.size() - 1).mutate();
+        }
+
+        // sorting based on dominatinos and return all the list of dominated fronts
+        ArrayList<ArrayList<Integer> > dominated_fronts = this.non_dominating_sort();
+        System.out.println("in between population");
+        System.out.println(this.curr_pop.get(dominated_fronts.get(0).get(0)).objective_values);
+
+        // now creating new population from the dominated fronts list using crowding distance
+        this.next_pop = new ArrayList<Chromosome>(this.population_size * 2 + 1);
+        int index = 0;
+        while(this.next_pop.size() + dominated_fronts.get(index).size() <= this.population_size){
+            for(int i = 0;i < dominated_fronts.get(index).size(); i++){
+                this.next_pop.add(this.curr_pop.get(dominated_fronts.get(index).get(i)));
+            }
+            index++;
+        }
+        // Applying crowding distance sort on last dominated front
+        this.crowding_sort(dominated_fronts.get(index));
+
+        //  adding the remaining solutions to population
+        for(int i = 0; i < dominated_fronts.get(index).size() && this.next_pop.size() < this.population_size; i++){
+            this.next_pop.add(this.curr_pop.get(dominated_fronts.get(index).get(i)));
+        }
+    }
 
     public static void main(String[] args) {
         System.out.println("hello");
+        MOGA obj = new MOGA();
+        for(int i=0;i<10;i++)
+            obj.curr_pop.get(i).display();
+        System.out.println("next gene");
+        obj.next_generation();
+        for(int i=0;i<10;i++)
+            obj.next_pop.get(i).display();
+
     }
 }
