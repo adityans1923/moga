@@ -120,14 +120,17 @@ public class MOGA {
     }
 
     public static void main(String[] args) {
-        System.out.println("hello");
-        MOGA obj = new MOGA();
-        for(int i=0;i<10;i++)
-            obj.curr_pop.get(i).display();
-        System.out.println("next gene");
-        obj.next_generation();
-        for(int i=0;i<10;i++)
-            obj.next_pop.get(i).display();
+//        System.out.println("hello");
+//        MOGA obj = new MOGA();
+//        for(int i=0;i<10;i++)
+//            obj.curr_pop.get(i).display();
+//        System.out.println("next gene");
+//        obj.next_generation();
+//        for(int i=0;i<10;i++)
+//            obj.next_pop.get(i).display();
+        Plot x=new Plot("Boys vs Girls");
+        x.run();
+
 
     }
 }
