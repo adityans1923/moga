@@ -98,8 +98,6 @@ public class MOGA {
 
         // sorting based on dominatinos and return all the list of dominated fronts
         ArrayList<ArrayList<Integer> > dominated_fronts = this.non_dominating_sort();
-        System.out.println("in between population");
-        System.out.println(this.curr_pop.get(dominated_fronts.get(0).get(0)).objective_values);
 
         // now creating new population from the dominated fronts list using crowding distance
         this.next_pop = new ArrayList<Chromosome>(this.population_size * 2 + 1);
@@ -120,17 +118,27 @@ public class MOGA {
     }
 
     public static void main(String[] args) {
-//        System.out.println("hello");
-//        MOGA obj = new MOGA();
-//        for(int i=0;i<10;i++)
-//            obj.curr_pop.get(i).display();
-//        System.out.println("next gene");
-//        obj.next_generation();
-//        for(int i=0;i<10;i++)
-//            obj.next_pop.get(i).display();
-        Plot x=new Plot("Boys vs Girls");
-        x.run();
+        System.out.println("hello");
+        MOGA obj = new MOGA();
+        for(int i=0;i<10;i++)
+            obj.curr_pop.get(i).display();
+        System.out.println("next gene");
+        obj.next_generation();
+        for(int i=0;i<10;i++)
+            obj.next_pop.get(i).display();
+        System.out.println("plotting");
+        ArrayList<ArrayList<Double> > plotdata = new ArrayList<ArrayList<Double> >();
+        for(int i=0;i<obj.population_size;i++)
+            plotdata.add(obj.curr_pop.get(i).objective_values);
 
+        Plot example = new Plot( "curr gen chart",
+                "X Axiz", "Y Axis"  ,plotdata );
 
+        System.out.println("plotting next gen");
+        ArrayList<ArrayList<Double> > plotdata2 = new ArrayList<ArrayList<Double> >();
+        for(int i=0;i<obj.population_size;i++)
+            plotdata2.add(obj.next_pop.get(i).objective_values);
+        Plot example2 = new Plot( "next gen",
+                "X Axiz", "Y Axis"  ,plotdata2 );
     }
 }
