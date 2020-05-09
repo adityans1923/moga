@@ -95,6 +95,14 @@ public class Chromosome {
         this.rank=rank;
     }
 
+    @Override
+    public boolean equals(Object o){
+        Chromosome other=(Chromosome)o;
+        for(int i=0;i<this.data.size();i++)
+            if(!this.data.get(i).equals(other.data.get(i)))
+                return false;
+        return true;
+    }
     int getRank(){
         return this.rank;
     }

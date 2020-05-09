@@ -14,7 +14,14 @@ public class MOGA {
         curr_pop = new ArrayList<Chromosome>(2* this.population_size + 1);
         rand  = new Random();
         // initializing population
-        for(int i=0;i< this.population_size; i++) curr_pop.add(new Chromosome(chromosome_size));
+        for(int i=0;i< this.population_size; i++){
+            Chromosome new_sol = new Chromosome(chromosome_size);
+            if(this.curr_pop.contains(new_sol)){
+                i--;
+                continue;
+            }
+            this.curr_pop.add(new_sol);
+        }
     }
     ArrayList<ArrayList<Integer> > non_dominating_sort() {
         // sort according to the domination into the fronts
@@ -92,10 +99,19 @@ public class MOGA {
             int index2 = rand.nextInt(this.population_size);
             while(index2 == index1)
                 index2 = rand.nextInt(this.population_size);
-            this.curr_pop.add(this.curr_pop.get(index1).crossover(this.curr_pop.get(index2)));
+            Chromosome child = this.curr_pop.get(index1).crossover(this.curr_pop.get(index2));
+            if(this.curr_pop.contains(child))
+            {
+                System.out.println("duplidate child produced: \n"+child.data);
+                continue;
+            }
+            this.curr_pop.add(child);
             this.curr_pop.get(this.curr_pop.size() - 1).mutate();
         }
-
+        if(this.curr_pop.size() < 100){
+            next_generation();
+            return;
+        }
         // sorting based on dominatinos and return all the list of dominated fronts
         ArrayList<ArrayList<Integer> > dominated_fronts = this.non_dominating_sort();
 
@@ -120,9 +136,6 @@ public class MOGA {
     public static void main(String[] args) {
         System.out.println("hello");
         MOGA obj = new MOGA();
-//        for(int i=0;i<10;i++)
-//            obj.curr_pop.get(i).display();
-//        System.out.println("next gene");
         ArrayList<ArrayList<Double> > idat = new ArrayList< ArrayList<Double> >();
         for(int i=0;i<obj.population_size;i++)
             idat.add(obj.curr_pop.get(i).objective_values);
@@ -133,9 +146,13 @@ public class MOGA {
             ArrayList<ArrayList<Double> > plotdata = new ArrayList< ArrayList<Double> >();
             for(int j=0;j<obj.population_size;j++)
                 plotdata.add(obj.next_pop.get(j).objective_values);
-            Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
+            if(i == 9){
+                Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
+                for(int j=0;j<100;j++)
+                    obj.next_pop.get(j).display();
+            }
             obj.curr_pop = obj.next_pop;
-            obj.next_pop = new ArrayList<>();
+            obj.next_pop = new ArrayList<>(2*Constant.population_size + 1);
         }
     }
 }
