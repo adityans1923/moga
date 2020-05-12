@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 
-public class Chromosome {
+public class Chromosome implements Serializable {
     private Random rand = new Random();
     public ArrayList<Double> objective_values;
     public ArrayList<Integer> data;
@@ -107,16 +108,6 @@ public class Chromosome {
         return this.rank;
     }
     boolean dominates(Chromosome object){
-//        boolean flag=true;
-//        for(int i = 0; i<Constant.obj_count; i++){
-//            if(this.objective_values.get(i) > object.objective_values.get(i))
-//                return false;
-//            if(flag){
-//                if(this.objective_values.get(i) < object.objective_values.get(i))
-//                    flag=false;
-//            }
-//        }
-//        return !flag;
         double a = this.objective_values.get(0), b=object.objective_values.get(0);
         double c = this.objective_values.get(1), d=object.objective_values.get(1);
         return (a<=b && c>=d && (a<b || c>d));

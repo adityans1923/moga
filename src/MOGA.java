@@ -1,3 +1,5 @@
+import javax.security.auth.callback.CallbackHandler;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -9,6 +11,7 @@ public class MOGA {
     public final int chromosome_size = Constant.chromosome_size;
     public ArrayList<Chromosome> curr_pop;
     public ArrayList<Chromosome> next_pop;
+
     MOGA(){
         // initialize variables
         curr_pop = new ArrayList<Chromosome>(2* this.population_size + 1);
@@ -23,6 +26,7 @@ public class MOGA {
             this.curr_pop.add(new_sol);
         }
     }
+
     ArrayList<ArrayList<Integer> > non_dominating_sort() {
         // sort according to the domination into the fronts
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
@@ -63,6 +67,7 @@ public class MOGA {
         }
         return dominated_front;
     }
+
     void crowding_sort(ArrayList<Integer> front){
         for(Integer x:front)    this.curr_pop.get(x).distance = 0;
         // for each objective
@@ -102,13 +107,19 @@ public class MOGA {
             Chromosome child = this.curr_pop.get(index1).crossover(this.curr_pop.get(index2));
             if(this.curr_pop.contains(child))
             {
-                System.out.println("duplidate child produced: \n"+child.data);
+//                System.out.println("duplidate child produced: \n"+child.data);
+                continue;
+            }
+            // the below condition improves output by reducing the range of solution
+            if(!(child.dominates(this.curr_pop.get(index1) ) || child.dominates(this.curr_pop.get(index2)))){
+//                System.out.println("Child does not dominates there parents");
                 continue;
             }
             this.curr_pop.add(child);
             this.curr_pop.get(this.curr_pop.size() - 1).mutate();
         }
-        if(this.curr_pop.size() < 100){
+        if(this.curr_pop.size() <= 100){
+            System.out.println("Redundant calling of next generation");
             next_generation();
             return;
         }
@@ -118,7 +129,8 @@ public class MOGA {
         // now creating new population from the dominated fronts list using crowding distance
         this.next_pop = new ArrayList<Chromosome>(this.population_size * 2 + 1);
         int index = 0;
-        while(this.next_pop.size() + dominated_fronts.get(index).size() <= this.population_size){
+        // <= doesnt work because when the size if exactly 100 then it casuing index out of range
+        while(this.next_pop.size() + dominated_fronts.get(index).size() < this.population_size){
             for(int i = 0;i < dominated_fronts.get(index).size(); i++){
                 this.next_pop.add(this.curr_pop.get(dominated_fronts.get(index).get(i)));
             }
@@ -132,27 +144,44 @@ public class MOGA {
             this.next_pop.add(this.curr_pop.get(dominated_fronts.get(index).get(i)));
         }
     }
-
-    public static void main(String[] args) {
+    ArrayList<Chromosome> readObject(String filename) throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream= new ObjectInputStream(new FileInputStream("./database/gen_"+filename));
+        ArrayList<Chromosome> hh = (ArrayList<Chromosome>)inputStream.readObject();
+        inputStream.close();
+        return hh;
+    }
+    void writeObject(String filename, ArrayList<Chromosome> obj) throws IOException{
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("./database/gen_"+filename));
+        outputStream.writeObject(obj);
+        outputStream.flush();
+        outputStream.close();
+    }
+    public static void main(String[] args){
         System.out.println("hello");
         MOGA obj = new MOGA();
         ArrayList<ArrayList<Double> > idat = new ArrayList< ArrayList<Double> >();
         for(int i=0;i<obj.population_size;i++)
             idat.add(obj.curr_pop.get(i).objective_values);
         Plot initialChart = new Plot( "Initial Gen","obj1", "obj2"  ,idat );
-        for(int i=0;i<10;i++){
+        for(int i=0;i<Constant.generation_count;i++){
             System.out.println("Generation : "+i);
             obj.next_generation();
             ArrayList<ArrayList<Double> > plotdata = new ArrayList< ArrayList<Double> >();
             for(int j=0;j<obj.population_size;j++)
                 plotdata.add(obj.next_pop.get(j).objective_values);
-            if(i == 9){
+            if(i == Constant.generation_count - 1){
                 Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
                 for(int j=0;j<100;j++)
                     obj.next_pop.get(j).display();
             }
             obj.curr_pop = obj.next_pop;
             obj.next_pop = new ArrayList<>(2*Constant.population_size + 1);
+            try{
+                obj.writeObject(Integer.toString(i), obj.curr_pop);
+            }catch (Exception e){
+                System.out.println("Error in writing data of GENERAATION : "+e.getMessage());
+            }
         }
+
     }
 }
