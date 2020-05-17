@@ -1,4 +1,3 @@
-import javax.security.auth.callback.CallbackHandler;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,6 +10,7 @@ public class MOGA {
     public final int chromosome_size = Constant.chromosome_size;
     public ArrayList<Chromosome> curr_pop;
     public ArrayList<Chromosome> next_pop;
+    public int repeated_gen_count =0;
 
     MOGA(){
         // initialize variables
@@ -77,8 +77,8 @@ public class MOGA {
                 @Override
                 public int compare(Integer integer, Integer t1) {
                     double dd =(curr_pop.get(integer).objective_values.get(finalI) - curr_pop.get(t1).objective_values.get(finalI));
-                    if(dd<0) return -1;
-                    else if(dd > 0) return 1;
+                    if(dd<0) return 1;
+                    else if(dd > 0) return -1;
                     return 0;
                 }
             });
@@ -118,9 +118,11 @@ public class MOGA {
             this.curr_pop.add(child);
             this.curr_pop.get(this.curr_pop.size() - 1).mutate();
         }
-        if(this.curr_pop.size() <= 100){
-            System.out.println("Redundant calling of next generation");
-            next_generation();
+        if(this.curr_pop.size() == 100){
+            this.repeated_gen_count++;
+            this.next_pop = this.curr_pop;
+//            System.out.println("Redundant calling of next generation");
+//            next_generation();
             return;
         }
         // sorting based on dominatinos and return all the list of dominated fronts
@@ -169,10 +171,11 @@ public class MOGA {
             ArrayList<ArrayList<Double> > plotdata = new ArrayList< ArrayList<Double> >();
             for(int j=0;j<obj.population_size;j++)
                 plotdata.add(obj.next_pop.get(j).objective_values);
-            if(i == Constant.generation_count - 1){
+            if(i == Constant.generation_count - 1 || obj.repeated_gen_count == 10){
                 Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
                 for(int j=0;j<100;j++)
                     obj.next_pop.get(j).display();
+                return ;
             }
             obj.curr_pop = obj.next_pop;
             obj.next_pop = new ArrayList<>(2*Constant.population_size + 1);

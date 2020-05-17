@@ -6,6 +6,6 @@ public class Constant implements Serializable {
     public static int chromosome_size = 9;
     public static int population_size=100;
     public static int mutation_probability = 7;
-    public static int generation_count = 20;
+    public static int generation_count = 500;
 
 }
