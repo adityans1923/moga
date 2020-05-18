@@ -20,7 +20,7 @@ public class Chromosome implements Serializable {
         objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
         rank = Constant.inf;
         distance = 0.0;
-        this.calculate_objective_value();
+//        this.calculate_objective_value();
     }
     Chromosome(ArrayList<Integer> initial_array){
         data = new ArrayList<Integer>(initial_array.size() + 1);
@@ -28,7 +28,7 @@ public class Chromosome implements Serializable {
         objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
         rank = Constant.inf;
         distance = Constant.inf;
-        this.calculate_objective_value();
+//        this.calculate_objective_value();
     }
     double calc_obj1(){
         this.objective_values.set(0,0.0);

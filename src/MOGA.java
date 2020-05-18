@@ -19,6 +19,7 @@ public class MOGA {
         // initializing population
         for(int i=0;i< this.population_size; i++){
             Chromosome new_sol = new Chromosome(chromosome_size);
+            new_sol.calculate_objective_value();
             if(this.curr_pop.contains(new_sol)){
                 i--;
                 continue;
@@ -30,19 +31,19 @@ public class MOGA {
     ArrayList<ArrayList<Integer> > non_dominating_sort() {
         // sort according to the domination into the fronts
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
-        ArrayList<ArrayList<Integer>> sol_dom_by = new ArrayList<ArrayList<Integer>>();
-        ArrayList<Integer> count_of_dom_by = new ArrayList<Integer>();
+        ArrayList<ArrayList<Integer>> sol_dom = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> dom_by_count = new ArrayList<Integer>();
 
         for (int i = 0; i < curr_pop.size(); i++) {
-            sol_dom_by.add(new ArrayList<Integer>());
-            count_of_dom_by.add(0);
+            sol_dom.add(new ArrayList<Integer>());
+            dom_by_count.add(0);
             for (int j = 0; j < curr_pop.size(); j++) {
                 if (this.curr_pop.get(i).dominates(this.curr_pop.get(j)))
-                    sol_dom_by.get(i).add(j);
+                    sol_dom.get(i).add(j);
                 else if (this.curr_pop.get(j).dominates(this.curr_pop.get(i)))
-                    count_of_dom_by.set(i, count_of_dom_by.get(i) + 1);
+                    dom_by_count.set(i, dom_by_count.get(i) + 1);
             }
-            if (count_of_dom_by.get(i) == 0) {
+            if (dom_by_count.get(i) == 0) {
                 if (dominated_front.size() == 0)
                     dominated_front.add(new ArrayList<Integer>());
                 dominated_front.get(0).add(i);
@@ -52,13 +53,13 @@ public class MOGA {
         while (dominated_front.get(front_count).size() != 0) {
             ArrayList<Integer> next_front = new ArrayList<Integer>();
             for (int i = 0; i < dominated_front.get(front_count).size(); i++) {
-                for (int j = 0; sol_dom_by.get(dominated_front.get(front_count).get(i)).size() > j; j++) {
-                    int cnt = count_of_dom_by.get(sol_dom_by.get(dominated_front.get(front_count).get(i)).get(j));
+                for (int j = 0; sol_dom.get(dominated_front.get(front_count).get(i)).size() > j; j++) {
+                    int cnt = dom_by_count.get(sol_dom.get(dominated_front.get(front_count).get(i)).get(j));
                     cnt--;
-                    count_of_dom_by.set(sol_dom_by.get(dominated_front.get(front_count).get(i)).get(j), cnt);
+                    dom_by_count.set(sol_dom.get(dominated_front.get(front_count).get(i)).get(j), cnt);
                     if (cnt == 0) {
-                        next_front.add(sol_dom_by.get(dominated_front.get(front_count).get(i)).get(j));
-                        this.curr_pop.get(sol_dom_by.get(dominated_front.get(front_count).get(i)).get(j)).setRank(front_count + 1);
+                        next_front.add(sol_dom.get(dominated_front.get(front_count).get(i)).get(j));
+                        this.curr_pop.get(sol_dom.get(dominated_front.get(front_count).get(i)).get(j)).setRank(front_count + 1);
                     }
                 }
             }
@@ -110,21 +111,24 @@ public class MOGA {
 //                System.out.println("duplidate child produced: \n"+child.data);
                 continue;
             }
+            child.mutate();
+            child.calculate_objective_value();
             // the below condition improves output by reducing the range of solution
             if(!(child.dominates(this.curr_pop.get(index1) ) || child.dominates(this.curr_pop.get(index2)))){
 //                System.out.println("Child does not dominates there parents");
                 continue;
             }
             this.curr_pop.add(child);
-            this.curr_pop.get(this.curr_pop.size() - 1).mutate();
         }
-        if(this.curr_pop.size() == 100){
+        // when no new child was able to live in current generation
+        if(this.curr_pop.size() == this.population_size){
             this.repeated_gen_count++;
             this.next_pop = this.curr_pop;
 //            System.out.println("Redundant calling of next generation");
 //            next_generation();
             return;
         }
+        this.repeated_gen_count = 0;
         // sorting based on dominatinos and return all the list of dominated fronts
         ArrayList<ArrayList<Integer> > dominated_fronts = this.non_dominating_sort();
 
@@ -171,18 +175,18 @@ public class MOGA {
             ArrayList<ArrayList<Double> > plotdata = new ArrayList< ArrayList<Double> >();
             for(int j=0;j<obj.population_size;j++)
                 plotdata.add(obj.next_pop.get(j).objective_values);
-            if(i == Constant.generation_count - 1 || obj.repeated_gen_count == 10){
-                Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
-                for(int j=0;j<100;j++)
-                    obj.next_pop.get(j).display();
-                return ;
-            }
             obj.curr_pop = obj.next_pop;
             obj.next_pop = new ArrayList<>(2*Constant.population_size + 1);
             try{
                 obj.writeObject(Integer.toString(i), obj.curr_pop);
             }catch (Exception e){
                 System.out.println("Error in writing data of GENERAATION : "+e.getMessage());
+            }
+            if(i == Constant.generation_count - 1 || obj.repeated_gen_count == 10){
+                Plot example = new Plot( "Gen: "+i,"obj1", "obj2"  ,plotdata );
+                for(int j=0;j<100;j++)
+                    obj.curr_pop.get(j).display();
+                return ;
             }
         }
 
