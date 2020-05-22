@@ -10,7 +10,7 @@ public class MOGA {
     public final int chromosome_size = Constant.chromosome_size;
     public ArrayList<Chromosome> curr_pop;
     public ArrayList<Chromosome> next_pop;
-    public int repeated_gen_count =0;
+    public int repeated_gen_count = 0;
 
     MOGA(){
         // initialize variables
@@ -25,9 +25,9 @@ public class MOGA {
                 continue;
             }
             this.curr_pop.add(new_sol);
+//            new_sol.display();
         }
     }
-
     ArrayList<ArrayList<Integer> > non_dominating_sort() {
         // sort according to the domination into the fronts
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
@@ -68,7 +68,6 @@ public class MOGA {
         }
         return dominated_front;
     }
-
     void crowding_sort(ArrayList<Integer> front){
         for(Integer x:front)    this.curr_pop.get(x).distance = 0;
         // for each objective
@@ -162,6 +161,7 @@ public class MOGA {
         outputStream.flush();
         outputStream.close();
     }
+
     public static void main(String[] args){
         System.out.println("hello");
         MOGA obj = new MOGA();
@@ -189,6 +189,5 @@ public class MOGA {
                 return ;
             }
         }
-
     }
 }

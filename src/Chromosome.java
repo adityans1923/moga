@@ -9,25 +9,29 @@ public class Chromosome implements Serializable {
     public ArrayList<Double> objective_values;
     public ArrayList<Integer> data;
     public int rank;
+    public String drank;
     public double distance;  // Crowding Distance
     public int id;           // unique Id to distinguish chromosomes
 
+    private void init(){
+        rank = Constant.inf;
+        distance = Constant.inf;
+        objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
+        drank ="";
+    }
+
     Chromosome(int n){
-        data = new ArrayList<Integer>(n+1);
+        data = new ArrayList<Integer>(n + 1);
         for(int i=0;i<n;i++)
             data.add(i);
         Collections.shuffle(this.data);
-        objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
-        rank = Constant.inf;
-        distance = 0.0;
+        this.init();
 //        this.calculate_objective_value();
     }
     Chromosome(ArrayList<Integer> initial_array){
         data = new ArrayList<Integer>(initial_array.size() + 1);
         data.addAll(initial_array);
-        objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
-        rank = Constant.inf;
-        distance = Constant.inf;
+        this.init();
 //        this.calculate_objective_value();
     }
     double calc_obj1(){
@@ -110,6 +114,6 @@ public class Chromosome implements Serializable {
     boolean dominates(Chromosome object){
         double a = this.objective_values.get(0), b=object.objective_values.get(0);
         double c = this.objective_values.get(1), d=object.objective_values.get(1);
-        return (a<=b && c>=d && (a<b || c>d));
+        return (a<=b && c<=d && (a<b || c<d));
     }
 }
