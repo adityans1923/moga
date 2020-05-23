@@ -9,7 +9,6 @@ public class Chromosome implements Serializable {
     public ArrayList<Double> objective_values;
     public ArrayList<Integer> data;
     public int rank;
-    public String drank;
     public double distance;  // Crowding Distance
     public int id;           // unique Id to distinguish chromosomes
 
@@ -17,7 +16,6 @@ public class Chromosome implements Serializable {
         rank = Constant.inf;
         distance = Constant.inf;
         objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));
-        drank ="";
     }
 
     Chromosome(int n){
