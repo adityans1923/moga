@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -146,6 +145,7 @@ public class Temp {
         ArrayList<ArrayList<Integer> > dominated_fronts = obj.non_dominating_sort();
         long endTime = System.nanoTime();
         System.out.println("That took v1 " + (endTime - startTime) + " milliseconds");
+        long diff = endTime-startTime;
 
 
         //extra
@@ -153,6 +153,10 @@ public class Temp {
         ArrayList<ArrayList<Integer> > dominated_frontv = obj.non_dominating_sort_v2();
         endTime = System.nanoTime();
         System.out.println("That took v2 " + (endTime - startTime) + " milliseconds");
+        if(diff > endTime-startTime)
+            System.out.println("winner is v2  : "+diff*1.00/(endTime-startTime)*1.00);
+        else System.out.println("Winner is v1 :  "+(endTime-startTime)*1.00/diff);
+        System.out.println();
 
         System.out.println("Comparing both method for same result");
         System.out.println(dominated_fronts.size() + " --- "+dominated_frontv.size());
