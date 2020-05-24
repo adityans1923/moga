@@ -68,6 +68,56 @@ public class MOGA {
         }
         return dominated_front;
     }
+
+
+    ArrayList<ArrayList<Integer> > non_dominating_sort_v2(){
+        ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> domination_arr = new ArrayList<>();
+//        char[] arr = new char[]{'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+        for(int i = 0;i < curr_pop.size(); i++){
+            domination_arr.add(i);
+        }
+        domination_arr.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer integer, Integer t1) {
+                Double a=0.0,b=0.0;
+                for(int i=0;i<obj_count;i++){
+                    if(!curr_pop.get(integer).objective_values.get(i).equals(curr_pop.get(t1).objective_values.get(i))){
+                        a = curr_pop.get(integer).objective_values.get(i);
+                        b = curr_pop.get(t1).objective_values.get(i);
+                        break;
+                    }
+                }
+//                System.out.println(integer +" -- "+t1+ "  "+a+"  "+b);
+                if(a < b) return -1;
+                else if(a > b)    return 1;
+                return 0;
+            }
+        });
+//        System.out.println("domiation arr");
+//        System.out.println(domination_arr);
+
+        dominated_front.add(new ArrayList<>());
+        dominated_front.get(0).add(domination_arr.get(0));
+        for(int j = 1;j < domination_arr.size() ; j++){
+            int front = 0;
+            while(front < dominated_front.size() && this.someone_dominates(dominated_front.get(front),domination_arr.get(j)))
+                front++;
+            if(front == dominated_front.size())
+                dominated_front.add(new ArrayList<>());
+            dominated_front.get(front).add(domination_arr.get(j));
+        }
+        return dominated_front;
+    }
+
+    public boolean someone_dominates(ArrayList<Integer> arr, Integer x){
+        for(int i=0;i<arr.size();i++)
+            if(this.curr_pop.get(arr.get(i)).dominates(this.curr_pop.get(x)))
+                return true;
+        return false;
+    }
+
+
     void crowding_sort(ArrayList<Integer> front){
         for(Integer x:front)    this.curr_pop.get(x).distance = 0;
         // for each objective
