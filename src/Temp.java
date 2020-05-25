@@ -27,7 +27,7 @@ public class Temp {
         }
     }
 
-    public boolean someone_dominates(ArrayList<Integer> arr, Integer x){
+    public boolean does_someone_dominates(ArrayList<Integer> arr, Integer x){
         for(int i=0;i<arr.size();i++)
             if(this.curr_pop.get(arr.get(i)).dominates(this.curr_pop.get(x)))
                 return true;
@@ -35,11 +35,11 @@ public class Temp {
     }
     ArrayList<ArrayList<Integer> > non_dominating_sort_v2(){
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
-        ArrayList<Integer> domination_arr = new ArrayList<>();
+        ArrayList<Integer> pop_arr = new ArrayList<>();
         for(int i = 0;i < curr_pop.size(); i++){
-            domination_arr.add(i);
+            pop_arr.add(i);
         }
-        domination_arr.sort(new Comparator<Integer>() {
+        pop_arr.sort(new Comparator<Integer>() {
             @Override
             public int compare(Integer integer, Integer t1) {
                 Double a=0.0,b=0.0;
@@ -57,27 +57,25 @@ public class Temp {
         });
 
         dominated_front.add(new ArrayList<>());
-        dominated_front.get(0).add(domination_arr.get(0));
-        int size = domination_arr.size();
-        for(int j = 1;j < size ; j++){
+        dominated_front.get(0).add(pop_arr.get(0));
+        int size = pop_arr.size();
+        for(int j = 1; j < size ; j++){
             int front = 0;
-            while(front < dominated_front.size() && this.someone_dominates(dominated_front.get(front),domination_arr.get(j)))
+            while(front < dominated_front.size() && this.does_someone_dominates(dominated_front.get(front),pop_arr.get(j)))
                 front++;
             if(front == dominated_front.size())
                 dominated_front.add(new ArrayList<>());
-            dominated_front.get(front).add(domination_arr.get(j));
+            dominated_front.get(front).add(pop_arr.get(j));
         }
         return dominated_front;
     }
 
-    ArrayList<ArrayList<Integer> > non_dominating_sort_v3(){
-        ArrayList<ArrayList<KdTree> > dominated_front = new ArrayList<>();
-        ArrayList<ArrayList<Integer> > tt = new ArrayList<>();
-        ArrayList<Integer> domination_arr = new ArrayList<>();
-        for(int i = 0; i < this.curr_pop.size(); i++){
-            domination_arr.add(i);
-        }
-        domination_arr.sort(new Comparator<Integer>() {
+    ArrayList<ArrayList<Integer> > non_dominating_sort_v3() {
+        ArrayList<ArrayList<Integer> > dominated_front = new ArrayList<>();
+        ArrayList<Integer> pop_arr = new ArrayList<>();
+        for(int i = this.curr_pop.size() - 1; i >= 0; i--)
+            pop_arr.add(i);
+        pop_arr.sort(new Comparator<Integer>() {
             @Override
             public int compare(Integer integer, Integer t1) {
                 Double a=0.0,b=0.0;
@@ -94,38 +92,45 @@ public class Temp {
             }
         });
 
-        tt.add(new ArrayList<>());
-        tt.get(0).add(domination_arr.get(0));
+        // now after this sort no higher index chromosome will be
+        // able to dominate any lower index chromosome
 
+        // Now we have to generate the Dominating Front
         dominated_front.add(new ArrayList<>());
-        for(int i = 0; i < this.obj_count; i++){
-            dominated_front.get(0).add( new KdTree(domination_arr.get(0), i) );
-        }
-        int size = domination_arr.size();
-        for(int j = 1;j <  size; j++){
-            int front = 0;
-            while(front < dominated_front.size() && this.isany_dominates(dominated_front.get(front),domination_arr.get(j)))
+        dominated_front.get(0).add(pop_arr.get(0));
+
+        // initializing the Kd-tree array which will of size = sizeof(dominated_front) * obj_count
+        ArrayList<ArrayList<KdTree>> treeList = new ArrayList<>();
+        treeList.add(new ArrayList<>());
+        // inserting first index in kd-tree with each objective as first to compare in kd-tree
+        for(int i = 0;i < this.obj_count ; i++)
+            treeList.get(0).add(new KdTree(pop_arr.get(0), i));
+
+        // generating other dominating front
+        int pop_size = pop_arr.size();
+        int front;
+        for(int j = 1; j < pop_size ; j++){
+            front = 0;
+            while (front < dominated_front.size() && this.someone_domiates_it(treeList.get(front) , pop_arr.get(j)))
                 front++;
-            if(front == dominated_front.size()){
-                tt.add(new ArrayList<>());
+            if(front == dominated_front.size() ){
                 dominated_front.add(new ArrayList<>());
-                for(int i = 0; i < this.obj_count; i++){
-                    dominated_front.get(front).add(new KdTree(domination_arr.get(j), i));
-                }
+                treeList.add(new ArrayList<>());
+                for(int i = 0;i < this.obj_count ; i++)
+                    treeList.get(front).add(new KdTree(pop_arr.get(j), i));
             }else{
-                for(int i = 0;i < this.obj_count; i++){
-                    dominated_front.get(front).get(i).add(domination_arr.get(j));
-                }
+                for(int i = 0;i < this.obj_count ; i++)
+                    treeList.get(front).get(i).add(pop_arr.get(j));
             }
-            tt.get(front).add(domination_arr.get(j));
+            dominated_front.get(front).add(pop_arr.get(j));
         }
-        return tt;
+
+        return dominated_front;
     }
-    public boolean isany_dominates(ArrayList<KdTree> arr, Integer x){
-        for(int i = 0; i < this.obj_count; i++){
-            if(arr.get(i).isAnyDominating(x))
+    private boolean someone_domiates_it(ArrayList<KdTree> arr, int chromosome){
+        for( int i = 0;i < this.obj_count; i++)
+            if(arr.get(i).isAnyDominating(chromosome))
                 return true;
-        }
         return false;
     }
 
@@ -133,6 +138,7 @@ public class Temp {
         System.out.println("hello");
         Temp obj = new Temp();
 
+        // adding new generation
         for(int i=0;i<obj.population_size;i++) {
             int index1 = obj.rand.nextInt(obj.population_size);
             int index2 = obj.rand.nextInt(obj.population_size);
@@ -140,55 +146,66 @@ public class Temp {
                 index2 = obj.rand.nextInt(obj.population_size);
             Chromosome child = obj.curr_pop.get(index1).crossover(obj.curr_pop.get(index2));
             if (obj.curr_pop.contains(child)) {
-//                System.out.println("duplidate child produced: \n"+child.data);
+                //System.out.println("duplidate child produced: \n"+child.data);
                 continue;
             }
             child.mutate();
             child.calculate_objective_value();
             // the below condition improves output by reducing the range of solution
             if (!(child.dominates(obj.curr_pop.get(index1)) || child.dominates(obj.curr_pop.get(index2)))) {
-//                System.out.println("Child does not dominates there parents");
+                //System.out.println("Child does not dominates there parents");
                 continue;
             }
             obj.curr_pop.add(child);
         }
-        // sorting based on dominatinos and return all the list of dominated fronts
+
 //        for(int i=0;i<obj.curr_pop.size();i++)
 //            obj.curr_pop.get(i).display();
 
+        // Initializing KD- Tree memory
         KdTree.init();
         KdTree.curr_pop = obj.curr_pop;
         System.out.println("Kd tree pos : "+ KdTree.pos);
-
-        long startTime = System.nanoTime();
-        ArrayList<ArrayList<Integer> > dominated_fronts = obj.non_dominating_sort_v3();
-        long endTime = System.nanoTime();
-        System.out.println("That took v3 " + (endTime - startTime) + " Nanoseconds");
-        long diff = endTime-startTime;
+        long startTime, endTime;
 
 
-        //extra
+        // non-dominating-sort-v2 simply optimized
+
         startTime = System.nanoTime();
         ArrayList<ArrayList<Integer> > dominated_frontv = obj.non_dominating_sort_v2();
         endTime = System.nanoTime();
-        System.out.println("That took v2 " + (endTime - startTime) + " Nanoseconds");
-        if(diff > endTime-startTime)
-            System.out.println("winner is v2  : "+diff*1.00/(endTime-startTime)*1.00);
-        else System.out.println("Winner is v3 :  "+(endTime-startTime)*1.00/diff);
+        long timeTakenByV2 = endTime - startTime;
+
+
+        // call non-dominating_sort v3 using KD TREE
+
+        startTime = System.nanoTime();
+        ArrayList<ArrayList<Integer> > dominated_fronts = obj.non_dominating_sort_v3();
+        endTime = System.nanoTime();
+        long timeTakenByV3 = endTime-startTime;
+
+
+        // Comparing both algo in terms of TIme Taken for the same input
+
+        System.out.println("That took v3 " + timeTakenByV3 + " Nanoseconds");
+        System.out.println("That took v2 " + timeTakenByV2 + " Nanoseconds");
+        if(timeTakenByV2 <= timeTakenByV3)  System.out.println("winner is v2 by ratio : " + timeTakenByV3*1.00/timeTakenByV2);
+        else                            System.out.println("Winner is v3 by ratio: " + timeTakenByV2*1.00/timeTakenByV3);
         System.out.println();
 
-        System.out.println("Comparing both method for same result");
-        System.out.println(dominated_fronts.size() + " --- "+dominated_frontv.size());
-        System.out.println("domination array v3");
-        for(int i=0;i<dominated_fronts.size();i++){
-            Collections.sort(dominated_fronts.get(i));
+        System.out.println("Comparing both method v3 -- v2 in term of Dominated Fronts Size");
+        System.out.println(dominated_fronts.size() + " --- " + dominated_frontv.size());
+
+//        System.out.println("domination array v3");
+//        for(int i=0;i<dominated_fronts.size();i++){
+//            Collections.sort(dominated_fronts.get(i));
 //            System.out.println(i+" -- "+dominated_fronts.get(i));
-        }
-        System.out.println("DOmination mine v2");
-        for(int i=0;i<dominated_frontv.size();i++){
-            Collections.sort(dominated_frontv.get(i));
+//        }
+//        System.out.println("DOmination mine v2");
+//        for(int i=0;i<dominated_frontv.size();i++){
+//            Collections.sort(dominated_frontv.get(i));
 //            System.out.println(i+" -- "+dominated_frontv.get(i));
-        }
+//        }
 
     }
 }

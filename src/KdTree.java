@@ -3,18 +3,20 @@ import java.util.ArrayList;
 public class KdTree {
 
     private static class Node{
-        public int data = -1;
-        public int left = -1, right = -1;
-        public Node(){}
+        public int data, left, right;
+        public Node(){
+            this.right = this.left = this.data = -1;
+        }
     }
-    private static Node[] tree= new Node[20000];
-    public static void init(){
-        for(int i = 0 ; i < 20000; i++)
-            tree[i] = new Node();
-    }
+    private static Node[] tree= new Node[40000];
     public static int pos = 0;
     private static final int kValue = Constant.obj_count;
     public static ArrayList<Chromosome> curr_pop;
+    public static void init(){
+        for(int i = 0 ; i < 40000; i++)
+            tree[i] = new Node();
+        System.out.println("Array of Node is Initialized successfully");
+    }
 
     public int startIndex = 0;
     public int root = -1;
@@ -25,18 +27,18 @@ public class KdTree {
         KdTree.pos++;
         this.startIndex = startIndex;
     }
-    public void add(int chrmo_index){
+    public void add(int chromo_index){
         int index = this.startIndex;
         int root = this.root;
         while (true){
-            if(KdTree.curr_pop.get(KdTree.tree[root].data).objective_values.get(index) < KdTree.curr_pop.get(chrmo_index).objective_values.get(index)){
+            if(KdTree.curr_pop.get(KdTree.tree[root].data).objective_values.get(index) < KdTree.curr_pop.get(chromo_index).objective_values.get(index)){
                 if(KdTree.tree[root].left != -1){
                     index = (index+1) % KdTree.kValue;
                     root = KdTree.tree[root].left;
                 }
                 else{
                     KdTree.tree[root].left = KdTree.pos;
-                    KdTree.tree[KdTree.pos++].data=chrmo_index;
+                    KdTree.tree[KdTree.pos++].data=chromo_index;
                     break;
                 }
             }
@@ -47,7 +49,7 @@ public class KdTree {
                 }
                 else {
                     KdTree.tree[root].right = KdTree.pos;
-                    KdTree.tree[KdTree.pos++].data = chrmo_index;
+                    KdTree.tree[KdTree.pos++].data = chromo_index;
                     break;
                 }
             }
@@ -59,7 +61,7 @@ public class KdTree {
         while (root != -1) {
             if (KdTree.curr_pop.get(KdTree.tree[root].data).dominates(KdTree.curr_pop.get(chromo_index)))
                 return true;
-            if (KdTree.curr_pop.get(KdTree.tree[root].data).objective_values.get(index) < KdTree.curr_pop.get(chromo_index).objective_values.get(index)){
+            else if (KdTree.curr_pop.get(KdTree.tree[root].data).objective_values.get(index) < KdTree.curr_pop.get(chromo_index).objective_values.get(index)){
                 index = (index + 1) % KdTree.kValue;
                 root = KdTree.tree[root].left;
             }
