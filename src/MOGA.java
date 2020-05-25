@@ -117,7 +117,6 @@ public class MOGA {
         return false;
     }
 
-
     void crowding_sort(ArrayList<Integer> front){
         for(Integer x:front)    this.curr_pop.get(x).distance = 0;
         // for each objective
