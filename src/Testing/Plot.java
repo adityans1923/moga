@@ -1,3 +1,5 @@
+package Testing;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -14,7 +16,7 @@ public class Plot extends JFrame {
     private static final long serialVersionUID = 6294689542092367723L;
 
     public Plot(String title, String xlabel, String ylabel, ArrayList<ArrayList<Double> > data) {
-        super("Scatter Plot");
+        super("Scatter Testing.Plot");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(800, 400);
         this.setLocationRelativeTo(null);

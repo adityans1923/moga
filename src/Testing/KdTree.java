@@ -1,3 +1,5 @@
+package Testing;
+
 import java.util.ArrayList;
 
 public class KdTree {
@@ -8,12 +10,12 @@ public class KdTree {
             this.right = this.left = this.data = -1;
         }
     }
-    private static Node[] tree= new Node[40000];
+    private static Node[] tree= new Node[400000];
     public static int pos = 0;
     private static final int kValue = Constant.obj_count;
     public static ArrayList<Chromosome> curr_pop;
     public static void init(){
-        for(int i = 0 ; i < 40000; i++)
+        for(int i = 0 ; i < 400000; i++)
             tree[i] = new Node();
         System.out.println("Array of Node is Initialized successfully");
     }

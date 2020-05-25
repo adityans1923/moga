@@ -1,3 +1,5 @@
+package Testing;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -116,7 +118,6 @@ public class MOGA {
                 return true;
         return false;
     }
-
 
     void crowding_sort(ArrayList<Integer> front){
         for(Integer x:front)    this.curr_pop.get(x).distance = 0;

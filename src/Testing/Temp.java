@@ -1,5 +1,6 @@
+package Testing;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -27,6 +28,48 @@ public class Temp {
         }
     }
 
+    ArrayList<ArrayList<Integer> > non_dominating_sort() {
+        // sort according to the domination into the fronts
+        ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> sol_dom = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> dom_by_count = new ArrayList<Integer>();
+
+        int size = curr_pop.size();
+        for (int i = 0; i < size; i++) {
+            sol_dom.add(new ArrayList<Integer>());
+            dom_by_count.add(0);
+            for (int j = 0; j < size; j++) {
+                if (this.curr_pop.get(i).dominates(this.curr_pop.get(j)))
+                    sol_dom.get(i).add(j);
+                else if (this.curr_pop.get(j).dominates(this.curr_pop.get(i)))
+                    dom_by_count.set(i, dom_by_count.get(i) + 1);
+            }
+            if (dom_by_count.get(i) == 0) {
+                if (dominated_front.size() == 0)
+                    dominated_front.add(new ArrayList<Integer>());
+                dominated_front.get(0).add(i);
+            }
+        }
+        int front_count = 0;
+        while (dominated_front.get(front_count).size() != 0) {
+            ArrayList<Integer> next_front = new ArrayList<Integer>();
+            for (int i = 0; i < dominated_front.get(front_count).size(); i++) {
+                for (int j = 0; sol_dom.get(dominated_front.get(front_count).get(i)).size() > j; j++) {
+                    int cnt = dom_by_count.get(sol_dom.get(dominated_front.get(front_count).get(i)).get(j));
+                    cnt--;
+                    dom_by_count.set(sol_dom.get(dominated_front.get(front_count).get(i)).get(j), cnt);
+                    if (cnt == 0) {
+                        next_front.add(sol_dom.get(dominated_front.get(front_count).get(i)).get(j));
+                        this.curr_pop.get(sol_dom.get(dominated_front.get(front_count).get(i)).get(j)).setRank(front_count + 1);
+                    }
+                }
+            }
+            front_count++;
+            dominated_front.add(next_front);
+        }
+        return dominated_front;
+    }
+
     public boolean does_someone_dominates(ArrayList<Integer> arr, Integer x){
         for(int i=0;i<arr.size();i++)
             if(this.curr_pop.get(arr.get(i)).dominates(this.curr_pop.get(x)))
@@ -36,9 +79,8 @@ public class Temp {
     ArrayList<ArrayList<Integer> > non_dominating_sort_v2(){
         ArrayList<ArrayList<Integer>> dominated_front = new ArrayList<ArrayList<Integer>>();
         ArrayList<Integer> pop_arr = new ArrayList<>();
-        for(int i = 0;i < curr_pop.size(); i++){
+        for(int i = this.curr_pop.size() - 1; i >= 0; i--)
             pop_arr.add(i);
-        }
         pop_arr.sort(new Comparator<Integer>() {
             @Override
             public int compare(Integer integer, Integer t1) {
@@ -113,12 +155,15 @@ public class Temp {
             front = 0;
             while (front < dominated_front.size() && this.someone_domiates_it(treeList.get(front) , pop_arr.get(j)))
                 front++;
+//            while (front < dominated_front.size() && this.does_someone_dominates(dominated_front.get(front), pop_arr.get(j)))
+//                front++;
             if(front == dominated_front.size() ){
                 dominated_front.add(new ArrayList<>());
                 treeList.add(new ArrayList<>());
                 for(int i = 0;i < this.obj_count ; i++)
                     treeList.get(front).add(new KdTree(pop_arr.get(j), i));
-            }else{
+            }
+            else{
                 for(int i = 0;i < this.obj_count ; i++)
                     treeList.get(front).get(i).add(pop_arr.get(j));
             }
@@ -166,7 +211,16 @@ public class Temp {
         KdTree.init();
         KdTree.curr_pop = obj.curr_pop;
         System.out.println("Kd tree pos : "+ KdTree.pos);
+        System.out.println("Population Size is : " + obj.curr_pop.size());
         long startTime, endTime;
+
+
+        // non-dominating-sort-v1 original code
+
+        startTime = System.nanoTime();
+        ArrayList<ArrayList<Integer> > dominated_fronto = obj.non_dominating_sort();
+        endTime = System.nanoTime();
+        long timeTakenByV1 = endTime - startTime;
 
 
         // non-dominating-sort-v2 simply optimized
@@ -189,12 +243,17 @@ public class Temp {
 
         System.out.println("That took v3 " + timeTakenByV3 + " Nanoseconds");
         System.out.println("That took v2 " + timeTakenByV2 + " Nanoseconds");
+        System.out.println("That took V1 " + timeTakenByV1 + " Nanoseconds (Original Algo)");
+        System.out.println();
         if(timeTakenByV2 <= timeTakenByV3)  System.out.println("winner is v2 by ratio : " + timeTakenByV3*1.00/timeTakenByV2);
         else                            System.out.println("Winner is v3 by ratio: " + timeTakenByV2*1.00/timeTakenByV3);
         System.out.println();
+        System.out.println("V1 / V3 := " + timeTakenByV1*1.000 / timeTakenByV3);
+        System.out.println("V1 / V2 := " + timeTakenByV1*1.00 / timeTakenByV2);
+        System.out.println();
 
-        System.out.println("Comparing both method v3 -- v2 in term of Dominated Fronts Size");
-        System.out.println(dominated_fronts.size() + " --- " + dominated_frontv.size());
+        System.out.println("Comparing both method v3 -- v2 -- v1(ORIGIANL) in term of Dominated Fronts Size");
+        System.out.println(dominated_fronts.size() + " --- " + dominated_frontv.size() + " ---- " + (dominated_fronto.size()-1));
 
 //        System.out.println("domination array v3");
 //        for(int i=0;i<dominated_fronts.size();i++){
