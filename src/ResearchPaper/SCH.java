@@ -10,9 +10,9 @@ public class SCH extends Chromosome {
 
     SCH() {
         super();
-        data.add(Constant.rand.nextInt(1001));
+        data.add((double) Constant.rand.nextInt(1001));
     }
-    SCH(ArrayList<Integer> initial_array){
+    SCH(ArrayList<Double> initial_array){
         super();
         data = initial_array;
     }
@@ -29,17 +29,17 @@ public class SCH extends Chromosome {
     @Override
     Chromosome crossover(Chromosome other){
         int pos = Constant.rand.nextInt(10);
-        int child = this.data.get(0);
-        int parent2 = other.data.get(0);
+        int child =  this.data.get(0).intValue();
+        int parent2 = other.data.get(0).intValue();
         parent2 = parent2 & (1 << (pos + 1) -1);
         child = (child & ((1 << (11) -1) & (1 << pos)) ^ parent2);
-        ArrayList<Integer> newdata = new ArrayList<>(Collections.singletonList(child));
+        ArrayList<Double> newdata = new ArrayList<Double>(Collections.singletonList((double)child));
         return new SCH(newdata);
     }
 
     @Override
     void mutate(){
-        this.data.set(0, this.data.get(0) ^ (1 << (Constant.rand.nextInt(10))));
+        this.data.set(0, (double)((this.data.get(0).intValue()) ^ (1 << (Constant.rand.nextInt(10)))));
     }
 
 }

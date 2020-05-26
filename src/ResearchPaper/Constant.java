@@ -13,11 +13,12 @@ public class Constant implements Serializable {
     public static int generation_count = 500;
     public static Random rand = new Random();
     public static Chromosome get_chromosome(){
-        return new SCH();
+        return new FON();
     }
-    public static Chromosome get_chromosome(ArrayList<Integer> initial_array){
-        return new SCH(initial_array);
+    public static Chromosome get_chromosome(ArrayList<Double> initial_array){
+        return new FON(initial_array);
     }
 }
 
 // SCH -- chromosome_size = 1, obj_count = 2
+// FON -- chromosome_size = 3, obj_count = 2

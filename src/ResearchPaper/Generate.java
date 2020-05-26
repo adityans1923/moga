@@ -126,25 +126,25 @@ public class Generate {
         Generate obj = new Generate();
 
         // adding new generation
-        for(int i = 0;i < obj.population_size; i++) {
-            int index1 = Constant.rand.nextInt(obj.population_size);
-            int index2 = Constant.rand.nextInt(obj.population_size);
-            while (index2 == index1)
-                index2 = Constant.rand.nextInt(obj.population_size);
-            Chromosome child = obj.curr_pop.get(index1).crossover(obj.curr_pop.get(index2));
-            child.mutate();
-            if (obj.curr_pop.contains(child)) {
-                //System.out.println("duplicate child produced: \n"+child.data);
-                continue;
-            }
-            child.calculate_objective_value();
-            // the below condition improves output by reducing the range of solution
-            if (!(child.dominates(obj.curr_pop.get(index1)) || child.dominates(obj.curr_pop.get(index2)))) {
-                //System.out.println("Child does not dominates there parents");
-                continue;
-            }
-            obj.curr_pop.add(child);
-        }
+//        for(int i = 0;i < obj.population_size; i++) {
+//            int index1 = Constant.rand.nextInt(obj.population_size);
+//            int index2 = Constant.rand.nextInt(obj.population_size);
+//            while (index2 == index1)
+//                index2 = Constant.rand.nextInt(obj.population_size);
+//            Chromosome child = obj.curr_pop.get(index1).crossover(obj.curr_pop.get(index2));
+//            child.mutate();
+//            if (obj.curr_pop.contains(child)) {
+//                //System.out.println("duplicate child produced: \n"+child.data);
+//                continue;
+//            }
+//            child.calculate_objective_value();
+//            // the below condition improves output by reducing the range of solution
+//            if (!(child.dominates(obj.curr_pop.get(index1)) || child.dominates(obj.curr_pop.get(index2)))) {
+//                //System.out.println("Child does not dominates there parents");
+//                continue;
+//            }
+//            obj.curr_pop.add(child);
+//        }
 
 //        for(int i=0;i<obj.curr_pop.size();i++)
 //            obj.curr_pop.get(i).display();
