@@ -8,7 +8,6 @@ import java.util.Comparator;
 public class Generate {
     public final int obj_count  = Constant.obj_count;
     public final int population_size = Constant.population_size;
-    public final int chromosome_size = Constant.chromosome_size;
     public ArrayList<Chromosome> curr_pop;
 
     public Generate(){

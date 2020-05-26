@@ -1,4 +1,7 @@
-package ResearchPaper;
+package ResearchPaper.TestProblem;
+
+import ResearchPaper.Chromosome;
+import ResearchPaper.Constant;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,17 +11,17 @@ public class SCH extends Chromosome {
     // chromosome size : 1 number between [-1000,1000]
     // obj_count : 2 [x^2 ,(x-2)^2]
 
-    SCH() {
+    public SCH() {
         super();
         data.add((double) Constant.rand.nextInt(1001));
     }
-    SCH(ArrayList<Double> initial_array){
+    public SCH(ArrayList<Double> initial_array){
         super();
         data = initial_array;
     }
 
     @Override
-    void calculate_objective_value() {
+    public void calculate_objective_value() {
         Double a1 = Math.pow(this.data.get(0), 2);
         Double a2 = Math.pow((this.data.get(0) - 2), 2);
         this.objective_values.set(0, a1);
@@ -27,7 +30,7 @@ public class SCH extends Chromosome {
 
 
     @Override
-    Chromosome crossover(Chromosome other){
+    public Chromosome crossover(Chromosome other){
         int pos = Constant.rand.nextInt(10);
         int child =  this.data.get(0).intValue();
         int parent2 = other.data.get(0).intValue();
@@ -38,7 +41,7 @@ public class SCH extends Chromosome {
     }
 
     @Override
-    void mutate(){
+    public void mutate(){
         this.data.set(0, (double)((this.data.get(0).intValue()) ^ (1 << (Constant.rand.nextInt(10)))));
     }
 

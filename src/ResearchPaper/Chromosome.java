@@ -6,22 +6,22 @@ import java.util.Collections;
 
 
 public abstract class Chromosome implements Serializable {
-    protected ArrayList<Double> objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));;
-    protected ArrayList<Double> data = new ArrayList<>(Constant.chromosome_size);
+    public ArrayList<Double> objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));;
+    public ArrayList<Double> data = new ArrayList<>();
 
-    public Chromosome(){ }
+    public Chromosome(){}
 
     void display(){
         System.out.println(this.data + " " + this.objective_values);
     }
-    void mutate(){
+    public void mutate(){
         int n = this.data.size();
         if(Constant.rand.nextInt(100) < Constant.mutation_probability)
             Collections.swap(this.data,Constant.rand.nextInt(n) , Constant.rand.nextInt(n));
     }
 
-    abstract Chromosome crossover(Chromosome other);
-    abstract void calculate_objective_value();
+    protected abstract Chromosome crossover(Chromosome other);
+    protected abstract void calculate_objective_value();
 
     @Override
     public boolean equals(Object o){
@@ -34,12 +34,12 @@ public abstract class Chromosome implements Serializable {
         return true;
     }
 
-    boolean dominates(Chromosome object){
+    public boolean dominates(Chromosome object){
         boolean isAnyStrictlySmall = false;
         for(int i = 0; i < Constant.obj_count; i++){
-            if(this.objective_values.get(i) > object.objective_values.get(i))
+            if(this.objective_values.get(i).compareTo(object.objective_values.get(i)) > 0)
                 return false;
-            if(this.objective_values.get(i) < object.objective_values.get(i))
+            if(this.objective_values.get(i).compareTo(object.objective_values.get(i)) < 0)
                 isAnyStrictlySmall = true;
         }
         return isAnyStrictlySmall;
