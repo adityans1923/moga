@@ -8,6 +8,7 @@ import java.util.Collections;
 public abstract class Chromosome implements Serializable {
     public ArrayList<Double> objective_values = new ArrayList<Double>(Collections.nCopies(Constant.obj_count , 0.0));;
     public ArrayList<Double> data = new ArrayList<>();
+    public double cDistance = 0;
 
     public Chromosome(){}
 

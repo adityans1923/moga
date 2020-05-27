@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 public class POL extends Chromosome {
 
-    public POL(){
+    @SafeVarargs
+    public POL(ArrayList<Double>... initial_array){
         super();
-        for(int i = 0; i < 2; i++)
-            this.data.add(Constant.rand.nextDouble()*(Math.PI)*(Constant.rand.nextBoolean()?1:-1));
-    }
-
-    public POL(ArrayList<Double> initial_arr){
-        super();
-        this.data = initial_arr;
+        if (initial_array.length == 0) {
+            for(int i = 0; i < 2; i++)
+                this.data.add(Constant.rand.nextDouble()*(Math.PI)*(Constant.rand.nextBoolean()?1:-1));
+        }
+        else
+            this.data = initial_array[0];
     }
 
     @Override

@@ -9,15 +9,15 @@ public class FON extends Chromosome {
 
     private double root3 = 1 / Math.pow(3.00, 0.5);
 
-    public FON(){
+    @SafeVarargs
+    public FON(ArrayList<Double>... initial_array){
         super();
-        for(int i = 0; i < 3; i++)
-            this.data.add(Constant.rand.nextDouble()*(4)*(Constant.rand.nextBoolean()?1:-1));
-    }
-
-    public FON(ArrayList<Double> initial_array){
-        super();
-        this.data = initial_array;
+        if (initial_array.length == 0) {
+            for(int i = 0; i < 3; i++)
+                this.data.add(Constant.rand.nextDouble()*(4)*(Constant.rand.nextBoolean()?1:-1));
+        }
+        else
+            this.data = initial_array[0];
     }
 
     @Override
