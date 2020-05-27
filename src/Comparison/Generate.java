@@ -257,14 +257,21 @@ public class Generate {
                 break;
             }
         }
+        int countv1 = 0, countv2 = 0;
         ArrayList<ArrayList<Double> > plot_data = new ArrayList<>();
         for (int j = 0; j < obj.v1Time.size() ; j++){
             ArrayList<Double> x = new ArrayList<>();
+            if (obj.v1Time.get(j) < obj.v2Time.get(j))
+                countv1++;
+            else
+                countv2++;
             x.add(obj.v1Time.get(j).doubleValue());
             x.add(obj.v2Time.get(j).doubleValue());
             plot_data.add(x);
         }
         Plot ht = new Plot("V1 vs V2", "V1", "V2", plot_data);
+        System.out.println("V1 wins : " + countv1 + " Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
+        System.out.println("V2 wins : " + countv2 + " Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
 
 //        System.out.println("Population Size is : " + obj.curr_pop.size());
 //        long startTime, endTime;

@@ -19,7 +19,7 @@ public class Constant implements Serializable {
 
     @SafeVarargs
     public static Chromosome get_chromosome(ArrayList<Double>... initial_array){
-        return new ZDT1(initial_array);
+        return new POL(initial_array);
     }
 }
 
