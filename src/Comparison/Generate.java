@@ -229,8 +229,9 @@ public class Generate {
 
 
     public static void main(String[] args) {
-        System.out.println("hello");
+        System.out.println("Program starts here : Hello Everyone");
         Generate obj = new Generate();
+        System.out.println("Main Object create successfully");
 
 //        for(int i=0;i<obj.curr_pop.size();i++)
 //            obj.curr_pop.get(i).display();
@@ -270,8 +271,8 @@ public class Generate {
             plot_data.add(x);
         }
         Plot ht = new Plot("V1 vs V2", "V1", "V2", plot_data);
-        System.out.println("V1 wins : " + countv1 + " Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
-        System.out.println("V2 wins : " + countv2 + " Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
+        System.out.println("V1 wins : " + countv1 + " times and have Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
+        System.out.println("V2 wins : " + countv2 + " times and have Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
 
 //        System.out.println("Population Size is : " + obj.curr_pop.size());
 //        long startTime, endTime;
