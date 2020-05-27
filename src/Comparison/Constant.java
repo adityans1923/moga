@@ -1,6 +1,9 @@
 package Comparison;
 
+import Comparison.TestProblem.FON;
+import Comparison.TestProblem.POL;
 import Comparison.TestProblem.SCH;
+import Comparison.TestProblem.ZDT1;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class Constant implements Serializable {
 
     @SafeVarargs
     public static Chromosome get_chromosome(ArrayList<Double>... initial_array){
-        return new SCH(initial_array);
+        return new ZDT1(initial_array);
     }
 }
 
