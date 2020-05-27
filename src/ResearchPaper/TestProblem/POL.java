@@ -9,18 +9,13 @@ public class POL extends Chromosome {
 
     public POL(){
         super();
-        for(int i = 0;i < 2; i++)
+        for(int i = 0; i < 2; i++)
             this.data.add(Constant.rand.nextDouble()*(Math.PI)*(Constant.rand.nextBoolean()?1:-1));
     }
 
     public POL(ArrayList<Double> initial_arr){
         super();
         this.data = initial_arr;
-    }
-
-    @Override
-    protected Chromosome crossover(Chromosome other) {
-        return null;
     }
 
     @Override

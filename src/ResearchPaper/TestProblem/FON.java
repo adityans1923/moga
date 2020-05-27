@@ -11,18 +11,13 @@ public class FON extends Chromosome {
 
     public FON(){
         super();
-        for(int i = 0;i < 3; i++)
+        for(int i = 0; i < 3; i++)
             this.data.add(Constant.rand.nextDouble()*(4)*(Constant.rand.nextBoolean()?1:-1));
     }
 
     public FON(ArrayList<Double> initial_array){
         super();
         this.data = initial_array;
-    }
-
-    @Override
-    public Chromosome crossover(Chromosome other) {
-        return null;
     }
 
     @Override
