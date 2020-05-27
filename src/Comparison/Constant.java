@@ -1,9 +1,6 @@
-package ResearchPaper;
+package Comparison;
 
-import ResearchPaper.TestProblem.FON;
-import ResearchPaper.TestProblem.POL;
-import ResearchPaper.TestProblem.SCH;
-import ResearchPaper.TestProblem.ZDT1;
+import Comparison.TestProblem.SCH;
 
 import java.io.Serializable;
 import java.util.ArrayList;

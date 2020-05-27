@@ -1,4 +1,4 @@
-package ResearchPaper;
+package Comparison;
 
 import java.io.Serializable;
 import java.util.ArrayList;

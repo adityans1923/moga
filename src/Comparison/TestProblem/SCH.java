@@ -1,10 +1,9 @@
-package ResearchPaper.TestProblem;
+package Comparison.TestProblem;
 
-import ResearchPaper.Chromosome;
-import ResearchPaper.Constant;
+import Comparison.Chromosome;
+import Comparison.Constant;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class SCH extends Chromosome {
 

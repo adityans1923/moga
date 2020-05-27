@@ -1,4 +1,4 @@
-package ResearchPaper;
+package Comparison;
 
 import java.io.*;
 import java.util.*;
@@ -27,13 +27,13 @@ public class Generate {
         this.v2Time  = new ArrayList<>();
     }
 
-    ArrayList<ResearchPaper.Chromosome> readObject(String filename) throws IOException, ClassNotFoundException {
+    ArrayList<Comparison.Chromosome> readObject(String filename) throws IOException, ClassNotFoundException {
         ObjectInputStream inputStream= new ObjectInputStream(new FileInputStream("./database/gen_"+filename));
-        ArrayList<ResearchPaper.Chromosome> hh = (ArrayList<ResearchPaper.Chromosome>)inputStream.readObject();
+        ArrayList<Comparison.Chromosome> hh = (ArrayList<Comparison.Chromosome>)inputStream.readObject();
         inputStream.close();
         return hh;
     }
-    void writeObject(String filename, ArrayList<ResearchPaper.Chromosome> obj) throws IOException{
+    void writeObject(String filename, ArrayList<Comparison.Chromosome> obj) throws IOException{
         ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("./database/gen_"+filename));
         outputStream.writeObject(obj);
         outputStream.flush();
