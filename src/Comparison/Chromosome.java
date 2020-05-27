@@ -20,7 +20,7 @@ public abstract class Chromosome implements Serializable {
         if(Constant.mutation_probability >= Constant.rand.nextInt(100)){
             double beta = Constant.rand.nextDouble();
             int pos = Constant.rand.nextInt(this.data.size());
-            beta  = this.data.get(pos) * beta + (1 - beta) <= 4 && this.data.get(pos) * beta + (1 - beta) >= -4 ? this.data.get(pos) * beta + (1 - beta) : (this.data.get(pos) * beta + (1 - beta) ) / 2;
+            beta  = this.data.get(pos) * (beta);
             this.data.set(pos, beta);
         }
     }

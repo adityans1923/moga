@@ -314,10 +314,12 @@ public class Generate {
 //            Collections.sort(dominated_frontv.get(i));
 //            System.out.println(i+" -- "+dominated_frontv.get(i));
 //        }
-//        System.out.println("Best Chromosome in dominating front 0: ");
-//        for(int i = 0; i < dominated_frontv.get(0).size() ;i++)
-//            obj.curr_pop.get(dominated_frontv.get(0).get(i)).display();
-//        System.out.println();
+
+        ArrayList<ArrayList<Integer> > dominated_frontv = obj.non_dominating_sort_v2();
+        System.out.println("Best Chromosome in dominating front 0: ");
+        for(int i = 0; i < dominated_frontv.get(0).size() ;i++)
+            obj.curr_pop.get(dominated_frontv.get(0).get(i)).display();
+        System.out.println();
 
     }
 }
