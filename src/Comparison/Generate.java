@@ -270,7 +270,7 @@ public class Generate {
             x.add(obj.v2Time.get(j).doubleValue());
             plot_data.add(x);
         }
-        Plot ht = new Plot("V1 vs V2", "V1", "V2", plot_data);
+        Plot ht = new Plot("Original vs Proposed algorithm", "Time taken by Original algo", "Time taken by Proposed algo", plot_data);
         System.out.println("V1 wins : " + countv1 + " times and have Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
         System.out.println("V2 wins : " + countv2 + " times and have Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
 

@@ -16,7 +16,7 @@ public class Constant implements Serializable {
 
     @SafeVarargs
     public static Chromosome get_chromosome(ArrayList<Double>... initial_array){
-        return new KUR(initial_array);
+        return new FON(initial_array);
     }
 }
 

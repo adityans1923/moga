@@ -11,7 +11,7 @@ public abstract class Chromosome implements Serializable {
     public double cDistance = 0;
 
     public Chromosome(){}
-
+    
     void display(){
         System.out.println(this.data + " " + this.objective_values);
     }
