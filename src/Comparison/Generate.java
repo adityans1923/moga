@@ -271,8 +271,10 @@ public class Generate {
             plot_data.add(x);
         }
         Plot ht = new Plot("Original vs Proposed algorithm", "Time taken by Original algo", "Time taken by Proposed algo", plot_data);
-        System.out.println("V1 wins : " + countv1 + " times and have Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
-        System.out.println("V2 wins : " + countv2 + " times and have Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
+        System.out.println();
+        System.out.println("Original Algorithm wins : " + countv1 + " times and have Probability : " + (double)(countv1*1.00 / obj.v1Time.size() ));
+        System.out.println("Proposed Algorithm wins : " + countv2 + " times and have Probability : " + (double)(countv2*1.00 / obj.v1Time.size() ));
+        System.out.println();
 
 //        System.out.println("Population Size is : " + obj.curr_pop.size());
 //        long startTime, endTime;
