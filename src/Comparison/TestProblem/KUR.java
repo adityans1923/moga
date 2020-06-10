@@ -25,6 +25,7 @@ public class KUR extends Chromosome {
             o1 += -10 * Math.exp(-0.2 * Math.sqrt( this.data.get(i)* this.data.get(i) + this.data.get(i+1)*this.data.get(i+1)));
             o2 += Math.pow(Math.abs(this.data.get(i)), 0.8) + 5*Math.sin(Math.pow(this.data.get(i), 3));
         }
+        o2 += Math.pow(Math.abs(this.data.get(2)), 0.8) + 5*Math.sin(Math.pow(this.data.get(2), 3));
         this.objective_values.set(0, o1);
         this.objective_values.set(1, o2);
     }

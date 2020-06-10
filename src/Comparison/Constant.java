@@ -7,16 +7,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Constant implements Serializable {
-    public static int obj_count=2;
-    public static final int inf=99999;
-    public static int population_size= 100;
+    public static int obj_count = 2;
+    public static int chromosome_size = 10;
+    public static final int inf = 99999;
+    public static int population_size = 1000;
     public static int mutation_probability = 23;
-    public static int generation_count = 1000;
+    public static int iteration_count = 1000;
     public static Random rand = new Random();
 
     @SafeVarargs
     public static Chromosome get_chromosome(ArrayList<Double>... initial_array){
-        return new ZDT4(initial_array);
+        return new SCH(initial_array);
     }
 }
 

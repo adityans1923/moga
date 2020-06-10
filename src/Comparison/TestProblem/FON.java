@@ -23,8 +23,8 @@ public class FON extends Chromosome {
     @Override
     public void calculate_objective_value() {
         double a1 = 0.0, a2 = 0.0;
-        int n = this.data.size();
-        for(int i = 0; i < n; i++){
+
+        for(int i = 0; i < 3; i++){
             a1 = a1 + Math.pow(this.data.get(i) - root3, 2);
             a2 = a2 + Math.pow(this.data.get(i) + root3, 2);
         }
