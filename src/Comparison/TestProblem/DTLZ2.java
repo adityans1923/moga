@@ -5,10 +5,10 @@ import Comparison.Constant;
 
 import java.util.ArrayList;
 
-public class DTLZ1 extends Chromosome {
+public class DTLZ2 extends Chromosome {
 
     @SafeVarargs
-    public DTLZ1(ArrayList<Double>... initial_array){
+    public DTLZ2( ArrayList<Double>... initial_array){
         super();
         if (initial_array.length == 0) {
             for (int i = 0; i < Constant.chromosome_size; i++){
@@ -22,20 +22,19 @@ public class DTLZ1 extends Chromosome {
     @Override
     protected void calculate_objective_value() {
 
-        double gx = Constant.chromosome_size - Constant.obj_count + 1;
+        double gx = 0 ;
         for( int i = Constant.obj_count - 1; i < Constant.chromosome_size; i++){
-            gx += Math.pow(this.data.get(i) -0.5, 2) - Math.cos( 20*Math.PI*(this.data.get(i) - 0.5));
+            gx += Math.pow(this.data.get(i) - 0.5, 2) ;
         }
-        gx *= 100;
+
         for(int i = 0; i < Constant.obj_count; i++){
-            double fx = 0.5;
+            double fx = (1 + gx) ;
             for(int j = 0; j < Constant.obj_count - i - 1; j++){
-                fx *= this.data.get(j);
+                fx *= Math.cos( this.data.get(j) * Math.PI / 2 );
             }
             if( i != 0){
-                fx *= (1 - this.data.get(Constant.obj_count - i -1));
+                fx *= Math.sin(this.data.get(Constant.obj_count - i -1) * Math.PI / 2);
             }
-            fx *= (1 + gx);
             this.objective_values.set(i, fx);
         }
     }
