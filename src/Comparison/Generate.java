@@ -7,14 +7,13 @@ import java.io.ObjectOutputStream;
 import java.util.*;
 
 public class Generate {
-    public final int obj_count  = Constant.obj_count;
-    public final int population_size = Constant.population_size;
+
     public ArrayList<Chromosome> population;
 
     public Generate(){
-        this.population = new ArrayList<>(2* this.population_size + 1);
+        this.population = new ArrayList<>(2* Constant.population_size + 1);
         // initializing population
-        for(int i = 0;i < this.population_size; i++){
+        for(int i = 0; i < Constant.population_size; i++){
             Chromosome new_sol = Constant.get_chromosome();
             if(this.population.contains(new_sol)){
                 i--;
@@ -83,7 +82,7 @@ public class Generate {
             pop_arr.add(i);
         pop_arr.sort((integer, t1) -> {
             Double a=0.0,b=0.0;
-            for(int i = 0; i < obj_count; i++){
+            for(int i = 0; i < Constant.obj_count; i++){
                 if(!population.get(integer).objective_values.get(i).equals(population.get(t1).objective_values.get(i))){
                     a = population.get(integer).objective_values.get(i);
                     b = population.get(t1).objective_values.get(i);
